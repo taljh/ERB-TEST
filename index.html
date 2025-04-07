@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة تسعير العبايات - النسخة المطورة</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="enhanced-ui.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-menu-toggle d-md-none" id="mobileMenuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Authentication Modal -->
+        <div class="auth-modal" id="authModal">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <img src="logo.png" alt="شعار حاسبة تسعير العبايات" class="auth-logo">
+                    <h2>حاسبة تسعير العبايات</h2>
+                    <p>النسخة المطورة</p>
+                </div>
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-tab="login">تسجيل الدخول</button>
+                    <button class="auth-tab" data-tab="register">إنشاء حساب</button>
+                </div>
+                <div class="auth-content">
+                    <div class="auth-form active" id="loginForm">
+                        <div class="form-group">
+                            <label for="loginEmail">البريد الإلكتروني</label>
+                            <input type="email" id="loginEmail" class="form-control" placeholder="أدخل بريدك الإلكتروني">
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">كلمة المرور</label>
+                            <div class="password-input">
+                                <input type="password" id="loginPassword" class="form-control" placeholder="أدخل كلمة المرور">
+                                <i class="fas fa-eye toggle-password"></i>
+                            </div>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="rememberMe">
+                            <label class="form-check-label" for="rememberMe">تذكرني</label>
+                        </div>
+                        <button class="btn btn-primary btn-block" id="loginBtn">تسجيل الدخول</button>
+                        <div class="auth-separator">
+                            <span>أو</span>
+                        </div>
+                        <button class="btn btn-outline-secondary btn-block" id="guestLoginBtn">
+                            <i class="fas fa-user-clock"></i> الدخول كزائر
+                        </button>
+                    </div>
+                    <div class="auth-form" id="registerForm">
+                        <div class="form-group">
+                            <label for="registerName">الاسم</label>
+                            <input type="text" id="registerName" class="form-control" placeholder="أدخل اسمك">
+                        </div>
+                        <div class="form-group">
+                            <label for="registerEmail">البريد الإلكتروني</label>
+                            <input type="email" id="registerEmail" class="form-control" placeholder="أدخل بريدك الإلكتروني">
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPassword">كلمة المرور</label>
+                            <div class="password-input">
+                                <input type="password" id="registerPassword" class="form-control" placeholder="أدخل كلمة المرور">
+                                <i class="fas fa-eye toggle-password"></i>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPasswordConfirm">تأكيد كلمة المرور</label>
+                            <div class="password-input">
+                                <input type="password" id="registerPasswordConfirm" class="form-control" placeholder="أعد إدخال كلمة المرور">
+                                <i class="fas fa-eye toggle-password"></i>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-block" id="registerBtn">إنشاء حساب</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Application -->
+        <div class="main-app" id="mainApp" style="display: none;">
+            <!-- Sidebar Navigation -->
+            <div class="sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <img src="logo.png" alt="شعار حاسبة تسعير العبايات" class="sidebar-logo">
+                    <h3>حاسبة تسعير العبايات</h3>
+                    <p>النسخة المطورة</p>
+                </div>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#dashboard" data-bs-toggle="tab">
+                            <i class="fas fa-home"></i> الرئيسية
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#settings" data-bs-toggle="tab">
+                            <i class="fas fa-cog"></i> إعدادات المشروع
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#pricing" data-bs-toggle="tab">
+                            <i class="fas fa-calculator"></i> تسعير العبايات
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#products" data-bs-toggle="tab">
+                            <i class="fas fa-list"></i> قائمة المنتجات
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#guide" data-bs-toggle="tab">
+                            <i class="fas fa-book"></i> دليل الاستخدام
+                        </a>
+                    </li>
+                </ul>
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <h5 id="userDisplayName">اسم المستخدم</h5>
+                        <p id="userEmail">example@email.com</p>
+                    </div>
+                    <div class="user-actions">
+                        <button class="btn btn-sm btn-outline-light" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+                        </button>
+                    </div>
+                </div>
+                <div class="sidebar-footer">
+                    <p>تم التطوير بواسطة</p>
+                    <h5>طلال</h5>
+                    <p>خبير التسويق والبزنس</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <div class="tab-content">
+                    <!-- Dashboard Tab -->
+                    <div class="tab-pane fade show active" id="dashboard">
+                        <div class="content-header">
+                            <h2>لوحة التحكم</h2>
+                        </div>
+                        <div class="content-body">
+                            <div class="dashboard-welcome">
+                                <div class="welcome-card">
+                                    <div class="welcome-icon">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                    <div class="welcome-content">
+                                        <h3>مرحباً بك في حاسبة تسعير العبايات</h3>
+                                        <p>النسخة المطورة مع ميزات متقدمة لمساعدتك في تسعير منتجاتك بشكل احترافي</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="dashboard-stats">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="stat-card">
+                                            <div class="stat-icon">
+                                                <i class="fas fa-tshirt"></i>
+                                            </div>
+                                            <div class="stat-content">
+                                                <h4 id="totalProducts">0</h4>
+                                                <p>إجمالي المنتجات</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="stat-card">
+                                            <div class="stat-icon">
+                                                <i class="fas fa-tags"></i>
+                                            </div>
+                                            <div class="stat-content">
+                                                <h4 id="avgPrice">0 ريال</h4>
+                                                <p>متوسط السعر</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="stat-card">
+                                            <div class="stat-icon">
+                                                <i class="fas fa-percentage"></i>
+                                            </div>
+                                            <div class="stat-content">
+                                                <h4 id="avgProfit">0%</h4>
+                                                <p>متوسط نسبة الربح</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="dashboard-actions">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="action-card">
+                                            <h4>البدء السريع</h4>
+                                            <div class="action-buttons">
+                                                <button class="btn btn-primary" onclick="document.querySelector('a[href=\'#settings\']').click()">
+                                                    <i class="fas fa-cog"></i> إعداد المشروع
+                                                </button>
+                                                <button class="btn btn-success" onclick="document.querySelector('a[href=\'#pricing\']').click()">
+                                                    <i class="fas fa-plus"></i> إضافة منتج جديد
+                                                </button>
+                                                <button class="btn btn-info" onclick="document.querySelector('a[href=\'#products\']').click()">
+                                                    <i class="fas fa-list"></i> عرض المنتجات
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="action-card">
+                                            <h4>تصدير البيانات</h4>
+                                            <div class="action-buttons">
+                                                <button class="btn btn-outline-primary" id="exportSettingsBtn">
+                                                    <i class="fas fa-download"></i> تصدير الإعدادات
+                                                </button>
+                                                <button class="btn btn-outline-success" id="exportProductsBtn">
+                                                    <i class="fas fa-download"></i> تصدير المنتجات
+                                                </button>
+                                                <button class="btn btn-outline-info" id="exportAllBtn">
+                                                    <i class="fas fa-download"></i> تصدير جميع البيانات
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="dashboard-categories">
+                                <h4>توزيع المنتجات حسب الفئة</h4>
+                                <div class="categories-chart">
+                                    <canvas id="categoriesChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Settings Tab -->
+                    <div class="tab-pane fade" id="settings">
+                        <div class="content-header">
+                            <h2>إعدادات المشروع</h2>
+                        </div>
+                        <div class="content-body">
+                            <div class="card settings-card">
+                                <div class="card-body">
+                                    <div class="row mb-4">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="projectName">اسم المشروع</label>
+                                                <input type="text" class="form-control" id="projectName" placeholder="أدخل اسم مشروعك">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="targetCategory">الفئة المستهدفة</label>
+                                                <select class="form-select" id="targetCategory">
+                                                    <option value="عبايات فاخرة جداً">عبايات فاخرة جداً</option>
+                                                    <option value="راقية" selected>راقية</option>
+                                                    <option value="يومية">يومية</option>
+                                                    <option value="اقتصادية">اقتصادية</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-4">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="monthlyProducts">عدد المنتجات الشهرية</label>
+                                                <input type="number" class="form-control" id="monthlyProducts" value="100">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="defaultProfitRate">نسبة الربح الافتراضية</label>
+                                                <div class="input-group">
+                                                    <input type="number" class="form-control" id="defaultProfitRate" value="50">
+                                                    <span class="input-group-text">%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <h4 class="settings-section-title">
+                                        <i class="fas fa-money-bill-wave"></i> التكاليف الثابتة
+                                    </h4>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered custom-table" id="fixedCostsTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>البند</th>
+                                                    <th>التكلفة الشهرية</th>
+                                                    <th>عدد المنتجات شهرياً</th>
+                                                    <th>التكلفة لكل منتج</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text"><i class="fas fa-home"></i></span>
+                                                            <input type="text" class="form-control fixed-cost-name" value="إيجار المشغل" data-row="0">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group">
+                                                            <input type="number" class="form-control fixed-cost" data-row="0" value="0">
+                                                            <span class="input-group-text">ريال</span>
+                                                        </div>
+                                                    </td>
+                                                    <td class="monthly-products">100</td>
+                                                    <td class="cost-per-product">0</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text"><i class="fas fa-users"></i></span>
+                                                            <input type="text" class="form-control fixed-cost-name" value="رواتب الموظفين" data-row="1">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group">
+                                                            <input type="number" class="form-control fixed-cost" data-row="1" value="0">
+                                                            <span class="input-group-text">ريال</span>
+                                                        </div>
+                                                    </td>
+                                                    <td class="monthly-products">100</td>
+                                                    <td class="cost-per-product">0</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text"><i class="fas fa-globe"></i></span>
+                                                            <input type="text" class="form-control fixed-cost-name" value="اشتراك الموقع الإلكتروني" data-row="2">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group">
+                                                            <input type="number" class="form-control fixed-cost" data-row="2" value="0">
+                                                            <span class="input-group-text">ريال</span>
+                                                        </div>
+                                                    </td>
+                                                    <td class="monthly-products">100</td>
+                                                    <td class="cost-per-product">0</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text"><i class="fas fa-file-invoice"></i></span>
+                                                            <input type="text" class="form-control fixed-cost-name" value="مصاريف إدارية" data-row="3">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group">
+                                                            <input type="number" class="form-control fixed-cost" data-row="3" value="0">
+                                                            <span class="input-group-text">ريال</span>
+                                                        </div>
+                                                    </td>
+                                                    <td class="monthly-products">100</td>
+                                                    <td class="cost-per-product">0</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text"><i class="fas fa-ad"></i></span>
+                                                            <input type="text" class="form-control fixed-cost-name" value="مصاريف تسويقية ثابتة" data-row="4">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group">
+                                                            <input type="number" class="form-control fixed-cost" data-row="4" value="0">
+                                                            <span class="input-group-text">ريال</span>
+                                                        </div>
+                                                    </td>
+                                                    <td class="monthly-products">100</td>
+                                                    <td class="cost-per-product">0</td>
+                                                </tr>
+                                                <tr id="addFixedCostRow">
+                                                    <td colspan="4" class="text-center">
+                                                        <button class="btn btn-sm btn-outline-primary" id="addFixedCostBtn">
+                                                            <i class="fas fa-plus"></i> إضافة بند جديد
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                <tr class="table-primary total-row">
+                                                    <td><strong>المجموع</strong></td>
+                                                    <td id="totalMonthlyCost">0</td>
+                                                    <td class="monthly-products">100</td>
+                                                    <td id="totalCostPerProduct">0</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="alert alert-info mt-4">
+                                        <h5><i class="fas fa-info-circle"></i> ملاحظات:</h5>
+                                        <ul>
+                                            <li>التكاليف الثابتة هي المصاريف التي تدفعها بغض النظر عن عدد المنتجات التي تنتجها.</li>
+                                            <li>يتم تقسيم التكاليف الثابتة على عدد المنتجات الشهرية لحساب تكلفة كل منتج.</li>
+                                            <li>الفئة المستهدفة تحدد مستوى الجودة والسعر الذي تستهدفه لمنتجاتك.</li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="settings-actions">
+                                        <button class="btn btn-primary" id="saveSettingsBtn">
+                                            <i class="fas fa-save"></i> حفظ الإعدادات
+                                        </button>
+                                        <button class="btn btn-outline-secondary" id="resetSettingsBtn">
+                                            <i class="fas fa-undo"></i> إعادة تعيين
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pricing Tab -->
+                    <div class="tab-pane fade" id="pricing">
+                        <div class="content-header">
+                            <h2>تسعير العبايات</h2>
+                        </div>
+                        <div class="content-body">
+                            <div class="card pricing-card">
+                                <div class="card-body">
+                                    <form id="productForm">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="productName">اسم المنتج</label>
+                                                    <input type="text" class="form-control" id="productName" placeholder="أدخل اسم العباية">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="productCode">رمز المنتج</label>
+                                                    <input type="text" class="form-control" id="productCode" placeholder="أدخل رمز العباية">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <h4 class="pricing-section-title">
+                                            <i class="fas fa-tshirt"></i> تكاليف العباية
+                                        </h4>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="mainFabricCost">تكلفة القماش الأساسي</label>
+                                                    <div class="input-group">
+                                                        <input type="number" class="form-control" id="mainFabricCost" value="0">
+                                                        <span class="input-group-text">ريال</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-check form-switch mb-2">
+                                                    <input class="form-check-input" type="checkbox" id="hasSecondaryFabric">
+                                                    <label class="form-check-label" for="hasSecondaryFabric">إضافة قماش ثانوي</label>
+                                                </div>
+                                                <div class="form-group" id="secondaryFabricGroup" style="display: none;">
+                                                    <label for="secondaryFabricCost">تكلفة القماش الثانوي</label>
+                                                    <div class="input-group">
+                                                        <input type="number" class="form-control" id="secondaryFabricCost" value="0">
+                                                        <span class="input-group-text">ريال</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <h4 class="pricing-section-title">
+                                            <i class="fas fa-scarf"></i> تكاليف الطرحة
+                                        </h4>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-check form-switch mb-2">
+                                                    <input class="form-check-input" type="checkbox" id="hasScarf">
+                                                    <label class="form-check-label" for="hasScarf">إضافة طرحة</label>
+                                                </div>
+                                                <div id="scarfGroup" style="display: none;">
+                                                    <div class="form-group">
+                                                        <label for="mainScarfCost">تكلفة قماش الطرحة الأساسي</label>
+                                                        <div class="input-group">
+                                                            <input type="number" class="form-control" id="mainScarfCost" value="0">
+                                                            <span class="input-group-text">ريال</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-check form-switch mb-2" id="hasSecondaryScarfSwitch" style="display: none;">
+                                                    <input class="form-check-input" type="checkbox" id="hasSecondaryScarf">
+                                                    <label class="form-check-label" for="hasSecondaryScarf">إضافة قماش ثانوي للطرحة</label>
+                                                </div>
+                                                <div class="form-group" id="secondaryScarfGroup" style="display: none;">
+                                                    <label for="secondaryScarfCost">تكلفة قماش الطرحة الثانوي</label>
+                                                    <div class="input-group">
+                                                        <input type="number" class="form-control" id="secondaryScarfCost" value="0">
+                                                        <span class="input-group-text">ريال</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <h4 class="pricing-section-title">
+                                            <i class="fas fa-hands-helping"></i> تكاليف الإنتاج
+                                        </h4>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="sewingCost">تكلفة الخياطة</label>
+                                                    <div class="input-group">
+                                                        <input type="number" class="form-control" id="sewingCost" value="0">
+                                                        <span class="input-group-text">ريال</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="packagingCost">تكلفة التغليف</label>
+                                                    <div class="input-group">
+                                                        <input type="number" class="form-control" id="packagingCost" value="0">
+                                                        <span class="input-group-text">ريال</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="shippingCost">تكلفة التوصيل الداخلي</label>
+                                                    <div class="input-group">
+                                                        <input type="number" class="form-control" id="shippingCost" value="0">
+                                                        <span class="input-group-text">ريال</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="additionalExpensesRate">نسبة المصاريف الإضافية</label>
+                                                    <div class="input-group">
+                                                        <input type="number" class="form-control" id="additionalExpensesRate" value="10">
+                                                        <span class="input-group-text">%</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <h4 class="pricing-section-title">
+                                            <i class="fas fa-chart-line"></i> الربحية
+                                        </h4>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="profitRate">نسبة الربح</label>
+                                                    <div class="input-group">
+                                                        <input type="number" class="form-control" id="profitRate" value="50">
+                                                        <span class="input-group-text">%</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="targetCategory">الفئة المستهدفة</label>
+                                                    <select class="form-select" id="productTargetCategory" disabled>
+                                                        <option value="عبايات فاخرة جداً">عبايات فاخرة جداً</option>
+                                                        <option value="راقية" selected>راقية</option>
+                                                        <option value="يومية">يومية</option>
+                                                        <option value="اقتصادية">اقتصادية</option>
+                                                    </select>
+                                                    <small class="form-text text-muted">يتم تحديدها تلقائياً من إعدادات المشروع</small>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="pricing-results">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="result-card">
+                                                        <div class="result-title">إجمالي التكلفة</div>
+                                                        <div class="result-value" id="totalCost">0 ريال</div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="result-card">
+                                                        <div class="result-title">السعر النهائي</div>
+                                                        <div class="result-value" id="finalPrice">0 ريال</div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="result-card">
+                                                        <div class="result-title">الفئة المحسوبة</div>
+                                                        <div class="result-value" id="calculatedCategory">-</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="alert mt-3" id="categoryAlert">
+                                                <i class="fas fa-info-circle"></i> أدخل بيانات المنتج لحساب السعر والفئة
+                                            </div>
+                                        </div>
+
+                                        <div class="pricing-actions">
+                                            <button type="button" class="btn btn-primary" id="saveProductBtn">
+                                                <i class="fas fa-save"></i> حفظ المنتج
+                                            </button>
+                                            <button type="button" class="btn btn-success" id="saveAndNewBtn">
+                                                <i class="fas fa-plus"></i> حفظ وإضافة منتج جديد
+                                            </button>
+                                            <button type="reset" class="btn btn-outline-secondary">
+                                                <i class="fas fa-undo"></i> إعادة تعيين
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Products Tab -->
+                    <div class="tab-pane fade" id="products">
+                        <div class="content-header">
+                            <h2>قائمة المنتجات</h2>
+                        </div>
+                        <div class="content-body">
+                            <div class="products-filters">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="filterCategory">تصفية حسب الفئة</label>
+                                            <select class="form-select" id="filterCategory">
+                                                <option value="all">جميع الفئات</option>
+                                                <option value="عبايات فاخرة جداً">عبايات فاخرة جداً</option>
+                                                <option value="راقية">راقية</option>
+                                                <option value="يومية">يومية</option>
+                                                <option value="اقتصادية">اقتصادية</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="sortProducts">ترتيب حسب</label>
+                                            <select class="form-select" id="sortProducts">
+                                                <option value="name">الاسم</option>
+                                                <option value="price">السعر (تصاعدي)</option>
+                                                <option value="price-desc">السعر (تنازلي)</option>
+                                                <option value="profit">نسبة الربح</option>
+                                                <option value="date">تاريخ الإضافة</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="searchProducts">بحث</label>
+                                            <input type="text" class="form-control" id="searchProducts" placeholder="ابحث عن منتج...">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="products-list" id="productsList">
+                                <!-- Products will be added dynamically -->
+                                <div class="no-products-message">
+                                    <i class="fas fa-box-open"></i>
+                                    <p>لا توجد منتجات حالياً</p>
+                                    <button class="btn btn-primary" onclick="document.querySelector('a[href=\'#pricing\']').click()">
+                                        <i class="fas fa-plus"></i> إضافة منتج جديد
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="products-pagination">
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination" id="productsPagination">
+                                        <!-- Pagination will be added dynamically -->
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Guide Tab -->
+                    <div class="tab-pane fade" id="guide">
+                        <div class="content-header">
+                            <h2>دليل الاستخدام</h2>
+                        </div>
+                        <div class="content-body">
+                            <div class="card guide-card">
+                                <div class="card-body">
+                                    <div class="guide-section">
+                                        <h4><i class="fas fa-info-circle"></i> مقدمة</h4>
+                                        <p>تم تطوير حاسبة تسعير العبايات لمساعدة أصحاب مشاريع العبايات في تسعير منتجاتهم بطريقة احترافية ومنظمة. تتيح هذه الأداة حساب تكلفة كل عباية بدقة، وتحديد سعر البيع المناسب بناءً على الفئة المستهدفة، مع تقديم تنبيهات ذكية لمساعدتك في اتخاذ قرارات التسعير الصحيحة.</p>
+                                    </div>
+
+                                    <div class="guide-section">
+                                        <h4><i class="fas fa-cog"></i> إعداد المشروع</h4>
+                                        <ol>
+                                            <li>انتقل إلى صفحة "إعدادات المشروع"</li>
+                                            <li>أدخل اسم مشروعك</li>
+                                            <li>حدد الفئة المستهدفة من القائمة المنسدلة</li>
+                                            <li>أدخل عدد المنتجات الشهرية المتوقعة</li>
+                                            <li>أدخل نسبة الربح الافتراضية</li>
+                                            <li>أدخل التكاليف الثابتة الشهرية في الجدول</li>
+                                            <li>انقر على "حفظ الإعدادات"</li>
+                                        </ol>
+                                    </div>
+
+                                    <div class="guide-section">
+                                        <h4><i class="fas fa-calculator"></i> تسعير المنتجات</h4>
+                                        <ol>
+                                            <li>انتقل إلى صفحة "تسعير العبايات"</li>
+                                            <li>أدخل اسم المنتج ورمزه</li>
+                                            <li>أدخل تكلفة القماش الأساسي</li>
+                                            <li>إذا كان هناك قماش ثانوي، فعّل الخيار وأدخل تكلفته</li>
+                                            <li>إذا كانت هناك طرحة، فعّل الخيار وأدخل تكلفة قماشها</li>
+                                            <li>أدخل تكاليف الخياطة والتغليف والتوصيل</li>
+                                            <li>حدد نسبة المصاريف الإضافية ونسبة الربح</li>
+                                            <li>راجع النتائج والتنبيهات</li>
+                                            <li>انقر على "حفظ المنتج" أو "حفظ وإضافة منتج جديد"</li>
+                                        </ol>
+                                    </div>
+
+                                    <div class="guide-section">
+                                        <h4><i class="fas fa-list"></i> قائمة المنتجات</h4>
+                                        <ol>
+                                            <li>انتقل إلى صفحة "قائمة المنتجات" لعرض جميع المنتجات المضافة</li>
+                                            <li>استخدم خيارات التصفية والترتيب والبحث للوصول إلى المنتجات بسهولة</li>
+                                            <li>انقر على أي منتج لعرض تفاصيله الكاملة</li>
+                                            <li>يمكنك تعديل أو حذف أي منتج من صفحة التفاصيل</li>
+                                        </ol>
+                                    </div>
+
+                                    <div class="guide-section">
+                                        <h4><i class="fas fa-tags"></i> معايير تصنيف الفئات</h4>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered custom-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>الفئة</th>
+                                                        <th>نطاق السعر</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>اقتصادية</td>
+                                                        <td>أقل من 200 ريال</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>يومية</td>
+                                                        <td>200 - 299 ريال</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>راقية</td>
+                                                        <td>300 - 449 ريال</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>عبايات فاخرة جداً</td>
+                                                        <td>450 ريال فأكثر</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <div class="guide-section">
+                                        <h4><i class="fas fa-lightbulb"></i> نصائح لاستخدام الحاسبة بفعالية</h4>
+                                        <ul>
+                                            <li><strong>تحديث البيانات بانتظام:</strong> قم بتحديث التكاليف الثابتة وعدد المنتجات الشهرية بشكل دوري للحصول على حسابات دقيقة.</li>
+                                            <li><strong>تجربة سيناريوهات مختلفة:</strong> جرب نسب ربح مختلفة لمعرفة تأثيرها على السعر النهائي والفئة المحسوبة.</li>
+                                            <li><strong>الانتباه للتنبيهات:</strong> استفد من التنبيهات الذكية لضمان توافق استراتيجية التسعير مع الفئة المستهدفة.</li>
+                                            <li><strong>مراعاة السوق:</strong> بالإضافة إلى التكاليف، ضع في اعتبارك أسعار المنافسين والقيمة المدركة للعملاء.</li>
+                                            <li><strong>التوازن بين الربحية والتنافسية:</strong> ابحث عن النقطة المثالية التي تحقق هامش ربح جيد مع الحفاظ على سعر تنافسي.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Detail Modal -->
+        <div class="modal fade" id="productDetailModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="productDetailTitle">تفاصيل المنتج</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="productDetailBody">
+                        <!-- Product details will be added dynamically -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                        <button type="button" class="btn btn-primary" id="editProductBtn">تعديل</button>
+                        <button type="button" class="btn btn-danger" id="deleteProductBtn">حذف</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Theme Toggle -->
+        <div class="theme-toggle">
+            <button id="themeToggleBtn" class="btn btn-sm">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+
+        <!-- Notifications -->
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+            <div id="notificationToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <i class="fas fa-bell me-2"></i>
+                    <strong class="me-auto" id="notificationTitle">إشعار</strong>
+                    <small id="notificationTime">الآن</small>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body" id="notificationBody">
+                    تم تنفيذ العملية بنجاح
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="auth.js"></script>
+    <script src="products.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Enhanced UI JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const sidebar = document.getElementById('sidebar');
+            
+            if (mobileMenuToggle) {
+                mobileMenuToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('show');
+                });
+            }
+            
+            // Theme toggle
+            const themeToggleBtn = document.getElementById('themeToggleBtn');
+            const themeIcon = themeToggleBtn.querySelector('i');
+            
+            themeToggleBtn.addEventListener('click', function() {
+                document.body.parentElement.classList.toggle('dark-mode');
+                
+                if (document.body.parentElement.classList.contains('dark-mode')) {
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    themeIcon.classList.remove('fa-sun');
+                    themeIcon.classList.add('fa-moon');
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+            
+            // Check for saved theme preference
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.parentElement.classList.add('dark-mode');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            }
+            
+            // Add animation classes to elements
+            document.querySelectorAll('.stat-card').forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.style.animation = 'fadeInUp 0.5s ease forwards';
+            });
+            
+            document.querySelectorAll('.action-card').forEach((card, index) => {
+                card.style.animationDelay = `${0.3 + index * 0.1}s`;
+                card.style.animation = 'fadeInUp 0.5s ease forwards';
+            });
+            
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                if (window.innerWidth <= 768 && sidebar.classList.contains('show')) {
+                    if (!sidebar.contains(event.target) && event.target !== mobileMenuToggle) {
+                        sidebar.classList.remove('show');
+                    }
+                }
+            });
+            
+            // Enhance form interactions
+            document.querySelectorAll('.form-control, .form-select').forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.closest('.form-group').classList.add('focused');
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.closest('.form-group').classList.remove('focused');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
